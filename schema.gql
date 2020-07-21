@@ -1,0 +1,37 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type GoodsTypeGraphql {
+  id: ID!
+  name: String!
+  price: Float
+  count: Float
+  remark: String
+}
+
+type Query {
+  getAllGoods: [GoodsTypeGraphql!]!
+  getGoods(id: String!): GoodsTypeGraphql!
+}
+
+type Mutation {
+  addOneGoods(goods: GoodsInsertTypeGraphql!): GoodsTypeGraphql!
+  updateGoods(goods: GoodsInputTypeGraphql!): GoodsTypeGraphql!
+  deleteOneGoods(id: String!): Boolean!
+}
+
+input GoodsInsertTypeGraphql {
+  name: String!
+  price: Float
+  count: Float
+  remark: String
+}
+
+input GoodsInputTypeGraphql {
+  id: ID!
+  name: String!
+  price: Float
+  count: Float
+  remark: String
+}
