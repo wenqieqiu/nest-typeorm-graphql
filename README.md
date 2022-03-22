@@ -2,11 +2,11 @@
 
 ```bash
 # 安装依赖
-yarn
+pnpm i
 # 开发模式运行
-yarn start:dev
+pnpm dev
 # 生产模式运行
-yarn start:prod
+pnpm start:prod
 ```
 
 ---
@@ -18,7 +18,7 @@ yarn start:prod
 1. #### 安装@nest/cli 脚手架用于生成项目；
 
 ```bash
-npm i -g @nest/cli
+pnpm i -g @nestjs/cli
 ```
 
 2. #### 生成项目
@@ -31,7 +31,7 @@ cd ./nest-typeorm-graphql
 3. #### 启动项目
 
 ```bash
-yarn start:dev
+pnpm dev
 ```
 
 启动完成后默认地址为：[http://localhost:3000/](http://localhost:3000/)，此时应该可以看到熟悉的`Hello World!`;
@@ -48,7 +48,7 @@ yarn start:dev
 1. #### 安装依赖
 
    ```bash
-   yarn add @nestjs/typeorm typeorm mongodb
+   pnpm i -S @nestjs/typeorm typeorm mongodb
    ```
 
 2. #### 在`src/app.module.ts`里配置数据库连接：
@@ -73,7 +73,8 @@ yarn start:dev
    ```
 
    > - 在上面的 TypeOrmModule 配置里我们设置了数据库实体映射的文件路径为`**/entity/*.{ts,js}`；
-   > - 为了开发方便，设置了`synchronize: true`，使 typeorm 可以自动在 MongoDB 里生成实体类定义的`Collections`，这样就省去了我们手动建立 Collections 的操作了；
+   > - 为了开发方便，设置了`synchronize: true`，使 typeorm 可以自动在 MongoDB 里生成实体类定义的`Collections`，这样就省去了我们手动建立
+   >   Collections 的操作了；
 
 ---
 
@@ -82,21 +83,24 @@ yarn start:dev
 1. #### 安装依赖
 
    ```bash
-   yarn add @nestjs/graphql graphql-tools graphql apollo-server-express
+   pnpm i -S @nestjs/graphql graphql-tools graphql apollo-server-express
    ```
 
 2. #### 在`src/app.module.ts`里配置 GraphQL：
 
-   > 在 NestJS 框架下有两种开发 GraphQL 的策略，一种是先写实体类定义的`代码先行`（[Code First](https://docs.nestjs.com/graphql/quick-start#code-first)）方式，另一种是先写`schema.gql`的`架构先行`（[Schema First](https://docs.nestjs.com/graphql/quick-start#schema-first)）方式；
-   > 为了保持开发风格与思路一致，这里采用了`代码先行`的策略;
+   > 在 NestJS 框架下有两种开发 GraphQL 的策略，一种是先写实体类定义
+   > 的`代码先行`（[Code First](https://docs.nestjs.com/graphql/quick-start#code-first)）方式，另一种是先
+   > 写`schema.gql`的`架构先行`（[Schema First](https://docs.nestjs.com/graphql/quick-start#schema-first)）方式；为了保持开发风格与思路一致
+   > ，这里采用了`代码先行`的策略;
 
    ```ts
-   import { GraphQLModule } from '@nestjs/graphql';
-
+    import { GraphQLModule } from '@nestjs/graphql';
+    import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
    @Module({
      imports: [
-       GraphQLModule.forRoot({
-         autoSchemaFile: './schema.gql', //代码先行(既先写实体定义)
+      GraphQLModule.forRoot<ApolloDriverConfig>({
+          driver: ApolloDriver,
+          autoSchemaFile: true, //代码先行(既先写实体定义)
        }),
      ],
    })
@@ -148,9 +152,7 @@ yarn start:dev
 
    @Injectable()
    export class GoodsService {
-     constructor(
-       @InjectRepository(Goods) public goodsRepository: Repository<Goods>,
-     ) {}
+     constructor(@InjectRepository(Goods) public goodsRepository: Repository<Goods>) {}
 
      public findAll() {
        return this.goodsRepository.find();
@@ -182,24 +184,17 @@ yarn start:dev
 
    `GoodsResolver`里定义 GraphQL 的 Query 与 Mutations：
 
-   > 具体使用参考 [NestJS Resolvers](https://docs.nestjs.com/graphql/resolvers#code-first-resolver) 文档与 [NestJS Mutations](https://docs.nestjs.com/graphql/mutations#code-first) 文档;
+   > 具体使用参考 [NestJS Resolvers](https://docs.nestjs.com/graphql/resolvers#code-first-resolver) 文档与
+   > [NestJS Mutations](https://docs.nestjs.com/graphql/mutations#code-first) 文档;
 
    ```ts
    import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
    import { GoodsService } from './goods.service';
-   import {
-     GoodsTypeGraphql,
-     GoodsInputTypeGraphql,
-     GoodsInsertTypeGraphql,
-   } from './entity/goods.type-graphql';
+   import { GoodsTypeGraphql, GoodsInputTypeGraphql, GoodsInsertTypeGraphql } from './entity/goods.type-graphql';
 
    // 包装Promise返回,使得async/await可以更方便写成同步语法的形式
-   function awaitWrap<T, U = any>(
-     promise: Promise<T>,
-   ): Promise<[U | null, T | null]> {
-     return promise
-       .then<[null, T]>((data: T) => [null, data])
-       .catch<[U, null]>((err) => [err, null]);
+   function awaitWrap<T, U = any>(promise: Promise<T>): Promise<[U | null, T | null]> {
+     return promise.then<[null, T]>((data: T) => [null, data]).catch<[U, null]>(err => [err, null]);
    }
 
    @Resolver('Goods')
@@ -260,13 +255,7 @@ yarn start:dev
    实体类定义如下：
 
    ```ts
-   import {
-     Entity,
-     Column,
-     ObjectID,
-     ObjectIdColumn,
-     PrimaryGeneratedColumn,
-   } from 'typeorm';
+   import { Entity, Column, ObjectID, ObjectIdColumn, PrimaryGeneratedColumn } from 'typeorm';
 
    @Entity()
    export class Goods {
@@ -293,8 +282,8 @@ yarn start:dev
 
 5. #### 生成 `goods.type-graphql.ts`，GraphQL 的类型定义文件；
 
-   这里使用了[代码先行](https://docs.nestjs.com/graphql/resolvers#code-first)的策略,用于编写 GraphQL 类型定义类
-   ,@nestjs/graphql 将自动生成 schema.gql；
+   这里使用了[代码先行](https://docs.nestjs.com/graphql/resolvers#code-first)的策略,用于编写 GraphQL 类型定义类 ,@nestjs/graphql 将自动生成
+   schema.gql；
 
    ```bash
    nest generate class goods.type-graphql --no-spec
@@ -355,15 +344,14 @@ yarn start:dev
    }
    ```
 
-   > 最终得到如下若干文件：
-   > ![文件列表.png](https://user-gold-cdn.xitu.io/2020/7/20/1736b5b810ba9c9f?w=264&h=197&f=png&s=7265)
+   > 最终得到如下若干文件： ![文件列表.png](https://user-gold-cdn.xitu.io/2020/7/20/1736b5b810ba9c9f?w=264&h=197&f=png&s=7265)
 
    ***
 
    ### 大功告成，再次启动服务
 
    ```bash
-   yarn start:dev
+   pnpm dev
    ```
 
    等待启动完成即可访问 [http://localhost:3000/graphql](http://localhost:3000/graphql)，打开 GraphQL Playground 愉快玩耍了；

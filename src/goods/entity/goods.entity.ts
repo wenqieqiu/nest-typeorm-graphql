@@ -1,20 +1,20 @@
-import { Entity, Column, ObjectID, ObjectIdColumn, PrimaryGeneratedColumn } from 'typeorm'
+import { Entity, Column, ObjectID, ObjectIdColumn, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Goods {
   @PrimaryGeneratedColumn()
   @ObjectIdColumn()
-  readonly id: ObjectID
+  readonly id: ObjectID;
 
   @Column({ unique: true })
-  readonly name: string
+  readonly name: string;
 
   @Column()
-  readonly price: number
+  readonly price: number;
 
   @Column()
-  readonly count: number
+  readonly count: number;
 
   @Column()
-  readonly remark: string
+  readonly remark: string;
 }

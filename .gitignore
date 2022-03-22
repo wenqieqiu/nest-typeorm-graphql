@@ -12,6 +12,9 @@ lerna-debug.log*
 
 # OS
 .DS_Store
+/.pnpm-store
+.pnpm-store
+.pnpm-store/*
 
 # Tests
 /coverage

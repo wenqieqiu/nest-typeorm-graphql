@@ -1,0 +1,23 @@
+{
+  "files.eol": "\n",
+  "editor.formatOnSave": true, //保存自动格式化
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": false,
+    "source.fixAll.eslint": true //保存自动eslint修复
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "eslint.format.enable": true,
+  "eslint.options": {
+    "extensions": [".js", ".jsx", ".ts", ".tsx"]
+  },
+  "eslint.validate": ["javascript", "javascriptreact", "jsx", "typescript", "tsx", "html", "vue"],
+  "eslint.alwaysShowStatus": true
+}

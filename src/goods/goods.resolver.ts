@@ -1,10 +1,6 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { GoodsService } from './goods.service';
-import {
-  GoodsTypeGraphql,
-  GoodsInputTypeGraphql,
-  GoodsInsertTypeGraphql,
-} from './entity/goods.type-graphql';
+import { GoodsTypeGraphql, GoodsInputTypeGraphql, GoodsInsertTypeGraphql } from './entity/goods.type-graphql';
 import { awaitWrap } from '../utils';
 
 @Resolver('Goods')
